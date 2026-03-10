@@ -1,0 +1,34 @@
+# IDE / редакторы
+.vs/
+.vscode/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Артефакты сборки
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Публикация
+publish/
+publish-*/
+
+# NuGet
+*.nupkg
+**/packages/
+project.lock.json
+
+# Настройки приложения 
+settings.json
+
+# Внутренние файлы проекта
+/Заметки/
+CLAUDE.md
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="XML-Dark" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Comment" foreground="#546e7a"/>
+    <Color name="Tag" foreground="#f07178"/>
+    <Color name="TagName" foreground="#ff479c"/>
+    <Color name="AttributeName" foreground="#c3e88d"/>
+    <Color name="AttributeValue" foreground="#c3e88d"/>
+    <Color name="Entity" foreground="#c3e88d"/>
+    <Color name="CData" foreground="#e0e0e6"/>
+
+    <RuleSet>
+        <Span color="Comment" multiline="true">
+            <Begin>&lt;!--</Begin>
+            <End>--&gt;</End>
+        </Span>
+
+        <Span color="CData" multiline="true">
+            <Begin>&lt;!\[CDATA\[</Begin>
+            <End>\]\]&gt;</End>
+        </Span>
+
+        <Span color="Tag" multiline="true">
+            <Begin>&lt;/?</Begin>
+            <End>&gt;</End>
+            <RuleSet>
+                <Span color="AttributeValue">
+                    <Begin>"</Begin>
+                    <End>"</End>
+                </Span>
+                <Span color="AttributeValue">
+                    <Begin>'</Begin>
+                    <End>'</End>
+                </Span>
+                <Rule color="AttributeName">
+                    [\w\d\-\:]+(?=\s*=)
+                </Rule>
+                <Rule color="TagName">
+                    [\w\d\-\:]+
+                </Rule>
+            </RuleSet>
+        </Span>
+
+        <Rule color="Entity">
+            &amp;\w+;
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

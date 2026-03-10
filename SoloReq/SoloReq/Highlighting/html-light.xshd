@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="HTML-Light" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Comment" foreground="#9ca3af"/>
+    <Color name="Tag" foreground="#dc2626"/>
+    <Color name="TagName" foreground="#be185d"/>
+    <Color name="AttributeName" foreground="#059669"/>
+    <Color name="AttributeValue" foreground="#059669"/>
+    <Color name="Entity" foreground="#059669"/>
+
+    <RuleSet>
+        <Span color="Comment" multiline="true">
+            <Begin>&lt;!--</Begin>
+            <End>--&gt;</End>
+        </Span>
+
+        <Span color="Tag" multiline="true">
+            <Begin>&lt;/?</Begin>
+            <End>&gt;</End>
+            <RuleSet>
+                <Span color="AttributeValue">
+                    <Begin>"</Begin>
+                    <End>"</End>
+                </Span>
+                <Span color="AttributeValue">
+                    <Begin>'</Begin>
+                    <End>'</End>
+                </Span>
+                <Rule color="AttributeName">
+                    [\w\d\-]+(?=\s*=)
+                </Rule>
+                <Rule color="TagName">
+                    [\w\d\-]+
+                </Rule>
+            </RuleSet>
+        </Span>
+
+        <Rule color="Entity">
+            &amp;\w+;
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

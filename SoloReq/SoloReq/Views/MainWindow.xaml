@@ -1,0 +1,172 @@
+<Window x:Class="SoloReq.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:SoloReq.Views"
+        Title=">_ solo-req"
+        Width="1200" Height="750"
+        MinWidth="1000" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        WindowStyle="None" AllowsTransparency="false">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="36" ResizeBorderThickness="6"
+                      GlassFrameThickness="0" CornerRadius="0"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Return" Modifiers="Ctrl" Command="{Binding SendRequestCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{Binding Request.FormatJsonCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding FocusUrlCommand}"/>
+        <KeyBinding Key="K" Modifiers="Ctrl" Command="{Binding OpenCookieManagerCommand}"/>
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding FocusHistoryCommand}"/>
+        <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ClearRequestCommand}"/>
+        <KeyBinding Key="F12" Command="{Binding ToggleThemeCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding OpenAboutCommand}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Custom Title Bar -->
+        <Grid Grid.Row="0" Background="{DynamicResource TitleBarBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Logo -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontFamily="{StaticResource MonoFont}" FontSize="16" FontWeight="Bold" Margin="0,0,6,0">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FF479C" Offset="0"/>
+                            <GradientStop Color="#FF9248" Offset="1"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                    &gt;_
+                </TextBlock>
+                <TextBlock Text="solo-req" FontFamily="{StaticResource MonoFont}" FontSize="14"
+                           Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Theme + Window buttons -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Theme Toggle -->
+                <Button x:Name="ThemeButton"
+                        Command="{Binding ToggleThemeCommand}"
+                        Width="36" Height="36"
+                        Background="Transparent" BorderThickness="0"
+                        Cursor="Hand"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Grid>
+                        <!-- Sun icon (Feather) — shown in dark theme, switches to light -->
+                        <Path Data="M12,1 L12,3 M12,21 L12,23 M4.22,4.22 L5.64,5.64 M18.36,18.36 L19.78,19.78 M1,12 L3,12 M21,12 L23,12 M4.22,19.78 L5.64,18.36 M18.36,5.64 L19.78,4.22 M17,12 A5,5 0 1,1 7,12 A5,5 0 1,1 17,12"
+                              Stroke="{DynamicResource TextPrimaryBrush}" StrokeThickness="1.5"
+                              Fill="Transparent" Stretch="Uniform"
+                              Width="18" Height="18"
+                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDarkTheme}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                        <!-- Moon icon (Feather) — shown in light theme, switches to dark -->
+                        <Path Data="M21,12.79 A9,9 0 1,1 11.21,3 A7,7 0 0,0 21,12.79 Z"
+                              Stroke="{DynamicResource TextPrimaryBrush}" StrokeThickness="1.5"
+                              Fill="Transparent" Stretch="Uniform"
+                              Width="18" Height="18"
+                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDarkTheme}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                    </Grid>
+                </Button>
+
+                <!-- Minimize -->
+                <Button Content="─" Click="MinimizeClick"
+                        FontSize="12" Width="46" Height="36"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Cursor="Hand"
+                        WindowChrome.IsHitTestVisibleInChrome="True"/>
+
+                <!-- Maximize -->
+                <Button Content="□" Click="MaximizeClick"
+                        FontSize="12" Width="46" Height="36"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Cursor="Hand"
+                        WindowChrome.IsHitTestVisibleInChrome="True"/>
+
+                <!-- Close -->
+                <Button Content="✕" Click="CloseClick"
+                        FontSize="12" Width="46" Height="36"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Cursor="Hand"
+                        WindowChrome.IsHitTestVisibleInChrome="True"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" MinWidth="160" MaxWidth="350"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- History Panel -->
+            <Border Grid.Column="0" CornerRadius="12" Background="{DynamicResource PanelBackgroundBrush}" Margin="4" ClipToBounds="True">
+                <views:HistoryPanel DataContext="{Binding History}"/>
+            </Border>
+
+            <!-- Vertical Splitter -->
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch"
+                          Background="Transparent" Cursor="SizeWE"/>
+
+            <!-- Request / Response -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="4"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Request Panel -->
+                <Border Grid.Row="0" CornerRadius="12" Background="{DynamicResource PanelBackgroundBrush}" Margin="4" ClipToBounds="True">
+                    <views:RequestPanel x:Name="RequestPanelControl"/>
+                </Border>
+
+                <!-- Horizontal Splitter -->
+                <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch"
+                              Background="Transparent" Cursor="SizeNS"/>
+
+                <!-- Response Panel -->
+                <Border Grid.Row="2" CornerRadius="12" Background="{DynamicResource PanelBackgroundBrush}" Margin="4" ClipToBounds="True">
+                    <views:ResponsePanel DataContext="{Binding Response}"/>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

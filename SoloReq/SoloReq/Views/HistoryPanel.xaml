@@ -1,0 +1,109 @@
+<UserControl x:Class="SoloReq.Views.HistoryPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:SoloReq.Converters"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <converters:StatusSuccessBrushConverter x:Key="StatusSuccessBrushConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="// История" Margin="12,12,12,8"
+                   FontFamily="{StaticResource MonoFont}" FontSize="13"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        <!-- History Items -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource PanelBackgroundBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                Margin="8,2" Padding="10,8" CornerRadius="12" Cursor="Hand"
+                                MouseLeftButtonDown="HistoryItem_Click">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <TranslateTransform Y="-2"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Method + Path -->
+                                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Request.Method}" FontWeight="Bold"
+                                               FontFamily="{StaticResource MonoFont}" FontSize="11"
+                                               Foreground="{DynamicResource TextPrimaryBrush}"
+                                               Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding Request.Url}" FontFamily="{StaticResource MonoFont}"
+                                               FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}"
+                                               TextTrimming="CharacterEllipsis" MaxWidth="140"/>
+                                </StackPanel>
+
+                                <!-- Repeat button -->
+                                <Button Grid.Row="0" Grid.Column="1" Content="&gt;&gt;" FontSize="10"
+                                        FontFamily="{StaticResource MonoFont}"
+                                        Background="Transparent" BorderThickness="0"
+                                        Foreground="{DynamicResource TextSecondaryBrush}"
+                                        Cursor="Hand" VerticalAlignment="Top"
+                                        Command="{Binding DataContext.RepeatCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"/>
+
+                                <!-- Status + Time -->
+                                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal" Margin="0,4,0,0">
+                                    <TextBlock FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                               Foreground="{Binding Response.StatusCode, Converter={StaticResource StatusSuccessBrushConverter}}">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}">
+                                                <Binding Path="Response.StatusCode"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock Text=" · " Foreground="{DynamicResource TextSecondaryBrush}"
+                                               FontFamily="{StaticResource MonoFont}" FontSize="10"/>
+                                    <TextBlock Text="{Binding Response.ElapsedMs, StringFormat={}{0}мс}"
+                                               FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Clear button -->
+        <Button Grid.Row="2" Content="Очистить" Margin="8,4,8,8"
+                Command="{Binding ClearHistoryCommand}"
+                FontFamily="{StaticResource MonoFont}" FontSize="11"
+                Foreground="{DynamicResource TextSecondaryBrush}"
+                Background="Transparent"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                Padding="8,6" Cursor="Hand"/>
+    </Grid>
+</UserControl>

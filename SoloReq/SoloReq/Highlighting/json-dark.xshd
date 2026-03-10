@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="JSON-Dark" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Key" foreground="#c3e88d"/>
+    <Color name="String" foreground="#c3e88d"/>
+    <Color name="Number" foreground="#ff9248"/>
+    <Color name="Boolean" foreground="#ff9248"/>
+    <Color name="Null" foreground="#ff9248"/>
+    <Color name="Brackets" foreground="#89ddff"/>
+
+    <RuleSet>
+        <!-- Keys: strings followed by colon -->
+        <Rule color="Key">
+            "([^"\\]|\\.)*"\s*(?=:)
+        </Rule>
+
+        <!-- String values -->
+        <Rule color="String">
+            "([^"\\]|\\.)*"
+        </Rule>
+
+        <Keywords color="Boolean">
+            <Word>true</Word>
+            <Word>false</Word>
+        </Keywords>
+
+        <Keywords color="Null">
+            <Word>null</Word>
+        </Keywords>
+
+        <Rule color="Number">
+            \b-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?\b
+        </Rule>
+
+        <Rule color="Brackets">
+            [\[\]{}:,]
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SoloReq.Models;
@@ -15,6 +16,15 @@ public partial class RequestViewModel : ObservableObject
         _jsonFormatter = jsonFormatter;
         Headers.Add(new HeaderItem { Key = "Content-Type", Value = "application/json" });
         Headers.Add(new HeaderItem { Key = "Accept", Value = "application/json" });
+        Headers.Add(new HeaderItem { Key = "User-Agent", Value = GetDefaultUserAgent() });
+    }
+
+    private static string GetDefaultUserAgent()
+    {
+        var version = Assembly.GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion?.Split('+')[0] ?? "1.0.0";
+        return $"solo_req/{version}";
     }
 
     [ObservableProperty] private string _url = string.Empty;
@@ -168,6 +178,7 @@ public partial class RequestViewModel : ObservableObject
         Headers.Clear();
         Headers.Add(new HeaderItem { Key = "Content-Type", Value = "application/json" });
         Headers.Add(new HeaderItem { Key = "Accept", Value = "application/json" });
+        Headers.Add(new HeaderItem { Key = "User-Agent", Value = GetDefaultUserAgent() });
         QueryParams.Clear();
     }
 }

@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -9,14 +8,15 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyName>SoloReq</AssemblyName>
     <RootNamespace>SoloReq</RootNamespace>
+    <Version>1.2.0</Version>
+    <DefineConstants Condition="'$(SelfContained)' == 'true'">$(DefineConstants);SELF_CONTAINED</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SharpCompress" Version="0.39.0" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Highlighting\json-dark.xshd" />
     <EmbeddedResource Include="Highlighting\json-light.xshd" />
@@ -25,9 +25,7 @@
     <EmbeddedResource Include="Highlighting\html-dark.xshd" />
     <EmbeddedResource Include="Highlighting\html-light.xshd" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Fonts\*.ttf" />
   </ItemGroup>
-
 </Project>

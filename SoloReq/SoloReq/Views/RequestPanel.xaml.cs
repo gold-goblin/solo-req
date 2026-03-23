@@ -1,8 +1,10 @@
 using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Xml;
+using SoloReq.Models;
 using SoloReq.Services;
 using SoloReq.ViewModels;
 
@@ -68,5 +70,25 @@ public partial class RequestPanel : UserControl
     {
         UrlTextBox.Focus();
         UrlTextBox.SelectAll();
+    }
+
+    private void OpenUserAgentPicker(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { DataContext: HeaderItem headerItem })
+            return;
+
+        var mainWindow = Window.GetWindow(this);
+        if (mainWindow?.DataContext is not MainViewModel mainVm)
+            return;
+
+        var vm = new UserAgentPickerViewModel(mainVm.UserAgentService);
+        var picker = new UserAgentPickerWindow
+        {
+            DataContext = vm,
+            Owner = mainWindow
+        };
+
+        if (picker.ShowDialog() == true && picker.SelectedUserAgent != null)
+            headerItem.Value = picker.SelectedUserAgent.Ua;
     }
 }

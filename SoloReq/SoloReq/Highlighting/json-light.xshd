@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="JSON-Light" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-    <Color name="Key" foreground="#059669"/>
+    <Color name="Key" foreground="#7c3aed"/>
     <Color name="String" foreground="#059669"/>
     <Color name="Number" foreground="#d97706"/>
     <Color name="Boolean" foreground="#d97706"/>

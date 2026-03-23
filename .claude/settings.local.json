@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"D:\\\\проекты\\\\solo-req\" && dotnet build SoloReq/SoloReq.sln 2>&1)"
+    ]
+  }
+}

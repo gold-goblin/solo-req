@@ -50,7 +50,9 @@ public class ThemeService
         else
             app.Resources.MergedDictionaries.Add(newTheme);
 
-        _settingsService.Save(new AppSettings { Theme = isDark ? "Dark" : "Light" });
+        var existingSettings = _settingsService.Load() ?? new AppSettings();
+        existingSettings.Theme = isDark ? "Dark" : "Light";
+        _settingsService.Save(existingSettings);
         ThemeChanged?.Invoke(isDark);
     }
 

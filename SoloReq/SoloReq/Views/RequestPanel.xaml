@@ -6,7 +6,6 @@
              Background="Transparent">
 
     <UserControl.Resources>
-        <converters:MethodToBrushConverter x:Key="MethodToBrushConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
     </UserControl.Resources>
@@ -145,6 +144,9 @@
                     <!-- AvalonEdit for request body -->
                     <Border Grid.Row="1" CornerRadius="8" ClipToBounds="True"
                             Background="{DynamicResource EditorBackgroundBrush}">
+                        <Border.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource EditorScrollBarStyle}"/>
+                        </Border.Resources>
                     <avalonedit:TextEditor x:Name="BodyEditor"
                                            FontFamily="{StaticResource MonoFont}" FontSize="13"
                                            Background="Transparent"
@@ -194,16 +196,43 @@
                                     </Style>
                                 </DataGridTextColumn.EditingElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Значение" Binding="{Binding Value}" Width="*"
-                                                Foreground="{DynamicResource TextPrimaryBrush}">
-                                <DataGridTextColumn.EditingElementStyle>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="Background" Value="{DynamicResource EditorBackgroundBrush}"/>
-                                        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-                                        <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
-                                    </Style>
-                                </DataGridTextColumn.EditingElementStyle>
-                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Значение" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock Text="{Binding Value}" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                                       Margin="2,0,26,0" TextTrimming="CharacterEllipsis"/>
+                                            <Button Content="☰" HorizontalAlignment="Right"
+                                                    Width="24" Height="20" Padding="0"
+                                                    Background="Transparent" BorderThickness="0"
+                                                    Foreground="{DynamicResource TextSecondaryBrush}"
+                                                    FontSize="12" Cursor="Hand"
+                                                    Click="OpenUserAgentPicker">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Key}" Value="User-Agent">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                                 Background="{DynamicResource EditorBackgroundBrush}"
+                                                 Foreground="{DynamicResource TextPrimaryBrush}"
+                                                 CaretBrush="{DynamicResource TextPrimaryBrush}"
+                                                 BorderThickness="0" Padding="2,0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="" Width="40">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

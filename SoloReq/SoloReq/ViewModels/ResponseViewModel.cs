@@ -27,6 +27,20 @@ public partial class ResponseViewModel : ObservableObject
     [ObservableProperty] private string _errorMessage = string.Empty;
     [ObservableProperty] private bool _hasResponse;
 
+    // Search
+    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty] private bool _isSearchVisible;
+    [ObservableProperty] private int _currentMatchIndex;
+    [ObservableProperty] private int _totalMatches;
+    [ObservableProperty] private bool _searchCaseSensitive;
+
+    public string MatchCountDisplay => TotalMatches > 0
+        ? $"{CurrentMatchIndex + 1} из {TotalMatches}"
+        : "Нет совпадений";
+
+    partial void OnCurrentMatchIndexChanged(int value) => OnPropertyChanged(nameof(MatchCountDisplay));
+    partial void OnTotalMatchesChanged(int value) => OnPropertyChanged(nameof(MatchCountDisplay));
+
     public ObservableCollection<KeyValuePair<string, string>> Headers { get; } = new();
     public ObservableCollection<CookieItem> Cookies { get; } = new();
 
@@ -113,6 +127,47 @@ public partial class ResponseViewModel : ObservableObject
             Body = _jsonFormatter.Format(Body);
     }
 
+    [RelayCommand]
+    private void ToggleSearch()
+    {
+        IsSearchVisible = !IsSearchVisible;
+        if (!IsSearchVisible)
+        {
+            SearchText = string.Empty;
+            TotalMatches = 0;
+            CurrentMatchIndex = 0;
+        }
+    }
+
+    [RelayCommand]
+    private void CloseSearch()
+    {
+        IsSearchVisible = false;
+        SearchText = string.Empty;
+        TotalMatches = 0;
+        CurrentMatchIndex = 0;
+    }
+
+    [RelayCommand]
+    private void NextMatch()
+    {
+        if (TotalMatches > 0)
+            CurrentMatchIndex = (CurrentMatchIndex + 1) % TotalMatches;
+    }
+
+    [RelayCommand]
+    private void PreviousMatch()
+    {
+        if (TotalMatches > 0)
+            CurrentMatchIndex = (CurrentMatchIndex - 1 + TotalMatches) % TotalMatches;
+    }
+
+    [RelayCommand]
+    private void ToggleCaseSensitive()
+    {
+        SearchCaseSensitive = !SearchCaseSensitive;
+    }
+
     public void Clear()
     {
         StatusCode = 0;
@@ -126,5 +181,9 @@ public partial class ResponseViewModel : ObservableObject
         HasResponse = false;
         Headers.Clear();
         Cookies.Clear();
+        IsSearchVisible = false;
+        SearchText = string.Empty;
+        TotalMatches = 0;
+        CurrentMatchIndex = 0;
     }
 }

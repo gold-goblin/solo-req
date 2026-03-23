@@ -47,6 +47,53 @@
     <SolidColorBrush x:Key="ScrollBarBrush" Color="#D0D0DA"/>
     <SolidColorBrush x:Key="ScrollBarHoverBrush" Color="#B0B0C0"/>
 
+    <!-- Editor Scrollbar (thin 6px, reusable for AvalonEdit) -->
+    <Style x:Key="EditorScrollBarStyle" TargetType="ScrollBar">
+        <Setter Property="Width" Value="6"/>
+        <Setter Property="MinWidth" Value="6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid>
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Style>
+                                        <Style TargetType="Thumb">
+                                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                            <Setter Property="IsTabStop" Value="False"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Thumb">
+                                                        <Border x:Name="thumbBorder"
+                                                                Background="{DynamicResource BorderBrush}"
+                                                                CornerRadius="3"/>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="thumbBorder" Property="Background" Value="{DynamicResource TextSecondaryBrush}"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Thumb.Style>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto"/>
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="MinHeight" Value="6"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- DataGrid -->
     <SolidColorBrush x:Key="DataGridAlternateRowBrush" Color="#FFFFFF"/>
 

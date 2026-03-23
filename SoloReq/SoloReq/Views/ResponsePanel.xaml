@@ -39,6 +39,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -48,11 +49,96 @@
                         <Button Content="Копировать" Command="{Binding CopyBodyCommand}"
                                 Style="{DynamicResource ToolbarTagButton}" Margin="0,0,4,0"/>
                         <Button Content="Сохранить" Command="{Binding SaveBodyCommand}"
+                                Style="{DynamicResource ToolbarTagButton}" Margin="0,0,4,0"/>
+                        <Button Content="Поиск" Command="{Binding ToggleSearchCommand}"
                                 Style="{DynamicResource ToolbarTagButton}"/>
                     </StackPanel>
 
-                    <Border Grid.Row="1" CornerRadius="8" ClipToBounds="True"
+                    <!-- Search Bar -->
+                    <Border Grid.Row="1" CornerRadius="8" Margin="0,0,0,4"
+                            Background="{DynamicResource EditorBackgroundBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                            Padding="6,4"
+                            Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="SearchTextBox" Grid.Column="0"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     FontFamily="{StaticResource MonoFont}" FontSize="13"
+                                     Background="Transparent"
+                                     Foreground="{DynamicResource TextPrimaryBrush}"
+                                     CaretBrush="{DynamicResource TextPrimaryBrush}"
+                                     BorderThickness="0" VerticalAlignment="Center"
+                                     Padding="2,0"/>
+
+                            <TextBlock Grid.Column="1" Text="{Binding MatchCountDisplay}"
+                                       FontFamily="{StaticResource MonoFont}" FontSize="11"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       VerticalAlignment="Center" Margin="4,0"/>
+
+                            <!-- Previous match (chevron-up) -->
+                            <Button Grid.Column="2" Command="{Binding PreviousMatchCommand}"
+                                    Width="28" Height="28" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" VerticalAlignment="Center">
+                                <Path Data="M18,15 L12,9 L6,15"
+                                      Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="1.5"
+                                      Stretch="Uniform" Width="12" Height="12"
+                                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Button>
+
+                            <!-- Next match (chevron-down) -->
+                            <Button Grid.Column="3" Command="{Binding NextMatchCommand}"
+                                    Width="28" Height="28" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" VerticalAlignment="Center">
+                                <Path Data="M6,9 L12,15 L18,9"
+                                      Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="1.5"
+                                      Stretch="Uniform" Width="12" Height="12"
+                                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Button>
+
+                            <!-- Case sensitive toggle (Aa) -->
+                            <Button Grid.Column="4" Content="Аа" Command="{Binding ToggleCaseSensitiveCommand}"
+                                    FontFamily="{StaticResource MonoFont}" FontSize="12"
+                                    Width="28" Height="28" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" VerticalAlignment="Center"
+                                    Padding="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SearchCaseSensitive}" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentPinkBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!-- Close search (x) -->
+                            <Button Grid.Column="5" Command="{Binding CloseSearchCommand}"
+                                    Width="28" Height="28" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" VerticalAlignment="Center">
+                                <Path Data="M18,6 L6,18 M6,6 L18,18"
+                                      Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="1.5"
+                                      Stretch="Uniform" Width="10" Height="10"
+                                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="2" CornerRadius="8" ClipToBounds="True"
                             Background="{DynamicResource EditorBackgroundBrush}">
+                        <Border.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource EditorScrollBarStyle}"/>
+                        </Border.Resources>
                     <avalonedit:TextEditor x:Name="ResponseBodyEditor"
                                            FontFamily="{StaticResource MonoFont}" FontSize="13"
                                            Background="Transparent"

@@ -15,6 +15,7 @@ public partial class MainViewModel : ObservableObject
     private readonly JsonFormatterService _jsonFormatter;
     private CancellationTokenSource? _cts;
 
+    public SettingsService SettingsService { get; }
     public bool IsFirstRun => _themeService.IsFirstRun;
 
     public MainViewModel()
@@ -22,15 +23,17 @@ public partial class MainViewModel : ObservableObject
         _jsonFormatter = new JsonFormatterService();
         _cookieService = new CookieService();
         _httpService = new HttpService(_cookieService);
-        var settingsService = new SettingsService();
-        _themeService = new ThemeService(settingsService);
+        SettingsService = new SettingsService();
+        _themeService = new ThemeService(SettingsService);
         _themeService.Initialize();
         _isDarkTheme = _themeService.IsDarkTheme;
 
+        var historyService = new HistoryService();
         Request = new RequestViewModel(_jsonFormatter);
         Response = new ResponseViewModel(_jsonFormatter);
-        History = new HistoryViewModel();
+        History = new HistoryViewModel(historyService);
         CookieManager = new CookieManagerViewModel(_cookieService);
+        Update = new UpdateViewModel(SettingsService);
 
         Request.OnHttpSchemeDetected = httpRequested =>
         {
@@ -58,6 +61,8 @@ public partial class MainViewModel : ObservableObject
     public ResponseViewModel Response { get; }
     public HistoryViewModel History { get; }
     public CookieManagerViewModel CookieManager { get; }
+    public UpdateViewModel Update { get; }
+    public UserAgentService UserAgentService { get; } = new();
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _sslVerificationDisabled;
